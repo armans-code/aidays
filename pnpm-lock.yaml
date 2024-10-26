@@ -11,6 +11,9 @@ dependencies:
   '@vercel/postgres':
     specifier: ^0.10.0
     version: 0.10.0
+  dotenv:
+    specifier: ^16.4.5
+    version: 16.4.5
   drizzle-orm:
     specifier: ^0.35.3
     version: 0.35.3(@libsql/client-wasm@0.14.0)(@types/react@18.3.12)(@vercel/postgres@0.10.0)(react@19.0.0-rc-69d4b800-20241021)
@@ -1553,6 +1556,11 @@ packages:
     dependencies:
       esutils: 2.0.3
     dev: true
+
+  /dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+    engines: {node: '>=12'}
+    dev: false
 
   /drizzle-kit@0.26.2:
     resolution: {integrity: sha512-cMq8omEKywjIy5KcqUo6LvEFxkl8/zYHsgYjFVXjmPWWtuW4blcz+YW9+oIhoaALgs2ebRjzXwsJgN9i6P49Dw==}
