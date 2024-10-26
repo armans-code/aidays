@@ -30,6 +30,7 @@ export async function POST(req: Request) {
         address: place.address ?? "",
       });
     } catch (error) {
+      console.log(error);
       return new Response("Internal Server Error", { status: 500 });
     }
     return new Response("OK", { status: 201 });
