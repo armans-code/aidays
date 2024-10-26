@@ -100,7 +100,6 @@ function ChatPrompt() {
     )
 }
 
-
 const ChatBot = () => {
     const [isVisible, setIsVisible] = useState(false);
 
