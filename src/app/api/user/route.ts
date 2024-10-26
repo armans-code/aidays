@@ -2,6 +2,7 @@ import { z } from "zod";
 import { db } from "../../../db";
 import { situations } from "../../../db/schema";
 import { getPlaces } from "../../../lib/places";
+import { classifySeverity } from "@/lib/severity";
 
 const bodySchema = z.object({
   name: z.string(),
@@ -21,6 +22,8 @@ export async function POST(req: Request) {
     const places = await getPlaces(res.address);
     const place = places[0];
 
+    const severity = await classifySeverity(res.situation)
+
     try {
       await db.insert(situations).values({
         ...res,
@@ -28,6 +31,10 @@ export async function POST(req: Request) {
         lon: place.location?.lng.toString() ?? "",
         place_name: place.name ?? "",
         address: place.address ?? "",
+        situation: res.situation,
+        severity: severity,
+        phone: res.phone,
+        name: res.name
       });
     } catch (error) {
       console.log(error);

@@ -1,21 +1,12 @@
-const dotenv = require('dotenv');
-const path = require('path');
-
-// *CHANGE* Load environment variables from "watson.env" file
-dotenv.config({ path: path.join(__dirname, 'watson.env') });
-
-const { WatsonXAI } = require('@ibm-cloud/watsonx-ai');
-const { IamAuthenticator } = require('ibm-cloud-sdk-core'); // Import the IamAuthenticator
-
-//console.log('Auth Type:', process.env.WATSONX_AI_AUTH_TYPE);
-//console.log('API Key:', process.env.WATSONX_AI_APIKEY);
+import { WatsonXAI } from '@ibm-cloud/watsonx-ai';
+import { IamAuthenticator } from 'ibm-cloud-sdk-core'; // Import the IamAuthenticator
 
 // Initialize WatsonXAI service with proper authenticator
 const watsonxAIService = WatsonXAI.newInstance({
   version: '2024-05-31',
   serviceUrl: 'https://us-south.ml.cloud.ibm.com',
   authenticator: new IamAuthenticator({
-    apikey: process.env.WATSONX_AI_APIKEY,
+    apikey: process.env.WATSONX_AI_APIKEY || ''
   }),
 });
 
@@ -27,7 +18,7 @@ const params = {
   },
 };
 
-async function classifySeverity(inputText) {
+export async function classifySeverity(inputText: string): Promise<number> {
   try {
     const updatedParams = {
       ...params,
@@ -36,7 +27,7 @@ async function classifySeverity(inputText) {
     };
     const response = await watsonxAIService.generateText(updatedParams);
     console.log({ response: response.result.results[0].generated_text });
-    return response.result.results[0].generated_text;
+    return parseInt(response.result.results[0].generated_text, 10);
   } catch (err) {
     console.error('Error generating text:', err);
     throw err;
