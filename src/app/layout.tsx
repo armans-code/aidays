@@ -1,8 +1,9 @@
-import { ClerkProvider, SignedIn, SignedOut } from "@clerk/nextjs";
+import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import Link from "next/link";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,12 +33,14 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Toaster />
-          <SignedOut>
-            <p>signed out</p>
-          </SignedOut>
-          <SignedIn>
-            <p>signed in</p>
-          </SignedIn>
+          <header className="flex items-center justify-between flex-row-reverse p-4">
+            <SignedOut>
+              <Link href="/login">Login</Link>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </header>
           {children}
         </body>
       </html>
