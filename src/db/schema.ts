@@ -9,10 +9,10 @@ export const users = pgTable("users", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
-export const wants = pgTable("wants", {
+export const situations = pgTable("situations", {
   id: serial("id").primaryKey(),
-  first_name: text("name").notNull(),
-  resource: text("resource").notNull(),
+  name: text("name").notNull(),
+  situation: text("resource").notNull(),
   address: text("address").notNull(),
   place_name: text("place_name").notNull(),
   lon: text("lon").notNull(),

@@ -1,13 +1,13 @@
 import { z } from "zod";
 import { db } from "../../../db";
-import { wants } from "../../../db/schema";
+import { situations } from "../../../db/schema";
 import { getPlaces } from "../../../lib/places";
 
 const bodySchema = z.object({
-  first_name: z.string(),
+  name: z.string(),
   phone: z.string(),
   address: z.string(),
-  resource: z.string(),
+  situation: z.string(),
 });
 
 // TODO: add rate limiting with KV
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     const place = places[0];
 
     try {
-      await db.insert(wants).values({
+      await db.insert(situations).values({
         ...res,
         lat: place.location?.lat.toString() ?? "",
         lon: place.location?.lng.toString() ?? "",
