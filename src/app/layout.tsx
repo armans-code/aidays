@@ -33,7 +33,8 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Toaster />
-          <header className="flex items-center justify-between flex-row-reverse p-4">
+          <header className="flex items-center justify-between p-4">
+            <h1 className="text-2xl font-bold">AidLink</h1>
             <SignedOut>
               <Link href="/login">Login</Link>
             </SignedOut>
