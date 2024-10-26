@@ -34,6 +34,7 @@ export async function POST(req: Request) {
     }
     return new Response("OK", { status: 201 });
   } catch (error) {
+    console.log(error);
     return new Response("Bad Request", { status: 400 });
   }
 }
