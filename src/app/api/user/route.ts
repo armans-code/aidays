@@ -9,6 +9,8 @@ const bodySchema = z.object({
   resource: z.string(),
 });
 
+// TODO: add rate limiting with KV
+
 export async function POST(req: Request) {
   //   TODO: Add webhook verification
   //   const token = req.headers.get("Authorization");
