@@ -2,8 +2,10 @@ import { pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  username: text("name").notNull(),
   phone: text("phone").notNull(),
+  lon: text("lon").notNull(),
+  lat: text("lat").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 

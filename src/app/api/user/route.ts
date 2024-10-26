@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { db } from "../../../db";
 import { wants } from "../../../db/schema";
-import { getPlaces } from "../../../lib/utils";
+import { getPlaces } from "../../../lib/places";
 
 const bodySchema = z.object({
   first_name: z.string(),
