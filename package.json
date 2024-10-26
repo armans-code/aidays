@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.0",
     "@types/jsonwebtoken": "^9.0.7",
     "@vercel/postgres": "^0.10.0",
     "dotenv": "^16.4.5",

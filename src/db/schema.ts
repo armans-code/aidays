@@ -12,6 +12,9 @@ export const wants = pgTable("wants", {
   first_name: text("name").notNull(),
   resource: text("resource").notNull(),
   address: text("address").notNull(),
+  place_name: text("place_name").notNull(),
+  lon: text("lon").notNull(),
+  lat: text("lat").notNull(),
   phone: text("phone").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
