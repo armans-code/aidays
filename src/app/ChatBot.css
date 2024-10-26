@@ -1,0 +1,69 @@
+.chatButton {
+    transition: .2s;
+    z-index: 1;
+    position: absolute;
+    bottom: 5rem;
+    right: 5rem;
+}
+
+.chatButton:hover {
+    filter: brightness(0) saturate(100%) invert(48%) sepia(100%) saturate(1000%) hue-rotate(180deg) brightness(90%) contrast(95%);
+}
+
+.chatPrompt {
+    z-index: 1;
+    position: absolute;
+    bottom: 10rem;
+    right: 5rem;
+    background-color: white;
+}
+
+.conversation-exchange {
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.conversation-exchange::-webkit-scrollbar { 
+    display: none;
+}
+
+.botConversation {
+    background-color: rgb(203 213 225);
+    max-width: 80%;
+    padding: .5rem;
+    border-radius: 0.5rem;
+    border-bottom-left-radius: 0px;
+    align-self: start;
+    box-shadow: 3px 3px 2px rgb(184, 183, 183);
+}
+
+.userConversation {
+    background-color: rgb(14 165 233);
+    max-width: 80%;
+    border-radius: 0.5rem;
+    border-bottom-right-radius: 0px;
+    padding: .5rem;
+    align-self: end;
+    box-shadow: -3px 3px 2px rgb(184, 183, 183);
+}
+
+.chatPrompt > div {
+    padding: .5rem;
+    padding-top: .8rem;
+    padding-bottom: .8rem;
+}
+
+.input-prompt {
+    transition: .2s;
+    outline: none;
+    height: 2.1rem;
+    padding-left: 8px;
+}
+
+.send-prompt:hover {
+    filter: brightness(0) saturate(100%) invert(48%) sepia(100%) saturate(1000%) hue-rotate(180deg) brightness(90%) contrast(95%);
+}
+
+.send-prompt {
+    transition: .2s;
+}
