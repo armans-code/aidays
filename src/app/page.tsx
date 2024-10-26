@@ -1,19 +1,16 @@
-<<<<<<< HEAD
 import Image from "next/image";
 import ChatBot from "./ChatBot"
+import HeatMap from "./HeatMap"
 
-=======
-import { db } from "../db";
->>>>>>> f4d4d06ee8d8515e87d1dd504bc598bc73174f18
 
 export default async function Home() {
-  const data = await db.query.wants.findFirst();
-  if (!data) return <p>no data</p>;
+  // const data = await db.query.wants.findFirst();
+  // if (!data) return <p>no data</p>;
   return (
-<<<<<<< HEAD
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
       <ChatBot />
+      <HeatMap />
         <Image
           className="dark:invert"
           src="/next.svg"
@@ -106,10 +103,6 @@ export default async function Home() {
           Go to nextjs.org →
         </a>
       </footer>
-=======
-    <div>
-      <p>{data.first_name}</p>
->>>>>>> f4d4d06ee8d8515e87d1dd504bc598bc73174f18
     </div>
   );
 }
