@@ -62,7 +62,9 @@ export default function RootLayout({
                 Contact
               </Link>
               <SignedIn>
-                <Button>Dashboard</Button>
+                <Link href="/dashboard">
+                  <Button>Dashboard</Button>
+                </Link>
               </SignedIn>
               <SignedOut>
                 <Link

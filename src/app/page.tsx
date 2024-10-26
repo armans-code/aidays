@@ -111,9 +111,7 @@ export default function LandingPage() {
                   placeholder="Enter your email"
                   type="email"
                 />
-                <Link href="/dashboard">
-                  <Button type="submit">Subscribe</Button>
-                </Link>
+                <Button type="submit">Subscribe</Button>
               </form>
             </div>
           </div>
