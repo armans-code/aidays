@@ -26,11 +26,7 @@ export async function classifySeverity(inputText: string): Promise<number> {
       input: params.input.replace("{input_text}", inputText),
       projectId: process.env.WATSONX_AI_PROJECT_ID!,
     };
-    const response = await watsonxAIService.generateText({
-      projectId: process.env.WATSONX_AI_PROJECT_ID!,
-      input: "There is a wildfire in my neighborhood and I'm stuck in my home.",
-      modelId: "google/flan-ul2",
-    });
+    const response = await watsonxAIService.generateText(updatedParams);
     console.log({ response: response.result.results[0].generated_text });
     return parseInt(response.result.results[0].generated_text, 10);
   } catch (err) {
@@ -38,9 +34,3 @@ export async function classifySeverity(inputText: string): Promise<number> {
     throw err;
   }
 }
-
-console.log(
-  await classifySeverity(
-    "There is a wildfire in my neighborhood and I'm stuck in my home."
-  )
-);
