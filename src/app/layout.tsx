@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import { Button } from "../components/ui/button";
-import ChatBot from "./ChatBot"
+import ChatBot from "./ChatBot";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -77,7 +77,7 @@ export default function RootLayout({
               </SignedOut>
             </nav>
           </header>
-          <ChatBot />
+          {/* <ChatBot /> */}
           {children}
         </body>
       </html>
