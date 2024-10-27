@@ -18,12 +18,12 @@ import {
   SidebarHeader,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import SituationMap from "../map/Map";
+import SituationMap from "../../map/Map";
 import {
   getNearbySituations,
   getNearbyWants,
   Request,
-} from "../../lib/actions";
+} from "../../../lib/actions";
 import { useUser } from "@clerk/nextjs";
 
 export default function Component() {

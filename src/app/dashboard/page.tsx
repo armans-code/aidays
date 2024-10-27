@@ -27,7 +27,7 @@ export default function UserDashboard() {
             </CardHeader>
             <CardContent>
               <Button className="w-full" size="lg" asChild>
-                <Link href="/side">Open Map</Link>
+                <Link href="/dashboard/map">Open Map</Link>
               </Button>
             </CardContent>
           </Card>

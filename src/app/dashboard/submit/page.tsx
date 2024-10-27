@@ -80,6 +80,7 @@ export default function ResourceRequestForm() {
       urgency,
       address: address.name,
       place_id: address.place_id,
+      tags: selectedResources,
     }).then(() => {
       toast.success("Request submitted successfully!");
       router.push("/dashboard");
