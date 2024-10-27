@@ -3,7 +3,7 @@ import { watsonxAIService } from "@/config/ibm";
 const params = {
   input:
     "Classify the natural disaster severity level on a scale from 1-10. 10 being highest severity. Only return the value and nothing else.\n\nInput: {input_text}\nOutput:",
-  modelId: "ibm-granite/granite-3.0-8b-instruct",
+  modelId: "ibm/granite-3-8b-instruct",
   parameters: {
     max_new_tokens: 100,
   },
