@@ -21,7 +21,6 @@ export const users = pgTable("users", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
-// hi
 export const wants = pgTable(
   "wants",
   {
