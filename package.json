@@ -34,13 +34,8 @@
     "leaflet.heat": "^0.2.0",
     "lucide-react": "^0.453.0",
     "next": "15.0.1",
-<<<<<<< HEAD
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-=======
     "react": "19.0.0-rc-69d4b800-20241021",
     "react-dom": "19.0.0-rc-69d4b800-20241021",
->>>>>>> 795cc3710fb06a7f38f620d57ccfeecaddd7a437
     "react-hot-toast": "^2.4.1",
     "react-leaflet": "^4.2.1",
     "tailwind-merge": "^2.5.4",
