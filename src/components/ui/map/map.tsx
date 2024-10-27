@@ -1,27 +1,18 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { MapPin, Layers, ArrowLeft } from "lucide-react"
-import Link from "next/link"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MapPin, Layers, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
+import { Situation } from "@/lib/types";
 
-export default function MapPage() {
-  const [isHeatmap, setIsHeatmap] = useState(false)
+export default function MapPage({ situations }: { situations: Situation[] }) {
+  const [isHeatmap, setIsHeatmap] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-sky-100 to-sky-50">
-      <header className="bg-primary text-primary-foreground p-6 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Aid Link Map</h1>
-          <Button variant="outline" className="text-black border-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
-            <Link href="/dashboard">
-              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
-            </Link>
-          </Button>
-        </div>
-      </header>
-
       <main className="flex-grow container mx-auto p-8">
         <Card className="bg-white/50 backdrop-blur-sm shadow-lg">
           <CardHeader>
@@ -32,12 +23,14 @@ export default function MapPage() {
                 ) : (
                   <MapPin className="w-6 h-6 mr-2 text-blue-500" />
                 )}
-                {isHeatmap ? 'Severity Heatmap' : 'Resource Request Map'}
+                {isHeatmap ? "Severity Heatmap" : "Resource Request Map"}
               </CardTitle>
               <div className="flex rounded-md shadow-sm" role="group">
                 <Button
                   variant={isHeatmap ? "outline" : "default"}
-                  className={`rounded-l-md ${!isHeatmap ? 'bg-primary text-primary-foreground' : ''}`}
+                  className={`rounded-l-md ${
+                    !isHeatmap ? "bg-primary text-primary-foreground" : ""
+                  }`}
                   onClick={() => setIsHeatmap(false)}
                 >
                   <MapPin className="w-4 h-4 mr-2" />
@@ -45,7 +38,9 @@ export default function MapPage() {
                 </Button>
                 <Button
                   variant={isHeatmap ? "default" : "outline"}
-                  className={`rounded-r-md ${isHeatmap ? 'bg-primary text-primary-foreground' : ''}`}
+                  className={`rounded-r-md ${
+                    isHeatmap ? "bg-primary text-primary-foreground" : ""
+                  }`}
                   onClick={() => setIsHeatmap(true)}
                 >
                   <Layers className="w-4 h-4 mr-2" />
@@ -57,15 +52,42 @@ export default function MapPage() {
           <CardContent>
             {/* Placeholder for the map component */}
             <div className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
-              <p className="text-gray-500 text-lg">
-                {isHeatmap ? 'Severity Heatmap' : 'Resource Request Map'} will be displayed here
-              </p>
+              {isHeatmap ? (
+                "Severity Heatmap"
+              ) : (
+                <APIProvider
+                  apiKey={process.env.NEXT_PUBLIC_MAPS_API_KEY || ""}
+                >
+                  <Map
+                    style={{ width: "100%", height: "100%" }}
+                    defaultCenter={{
+                      lat: 29.6469297097701,
+                      lng: -82.353240760785,
+                    }}
+                    defaultZoom={12.5}
+                    gestureHandling={"greedy"}
+                    disableDefaultUI={true}
+                  >
+                    {situations.map((situation: Situation) => {
+                      return (
+                        <Marker
+                          key={situation.id}
+                          position={{
+                            lat: parseFloat(situation.lat),
+                            lng: parseFloat(situation.lon),
+                          }}
+                        />
+                      );
+                    })}
+                  </Map>
+                </APIProvider>
+              )}
             </div>
             <div className="mt-4 text-sm text-gray-600">
               <p>
                 {isHeatmap
-                  ? 'The heatmap shows severity levels based on reported incidents.'
-                  : 'This map displays current resource requests from users in the affected areas'}
+                  ? "The heatmap shows severity levels based on reported incidents."
+                  : "This map displays current resource requests from users in the affected areas"}
               </p>
             </div>
           </CardContent>
@@ -106,5 +128,5 @@ export default function MapPage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
