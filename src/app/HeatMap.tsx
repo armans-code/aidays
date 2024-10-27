@@ -5,19 +5,32 @@ import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import 'leaflet.heat';
+import { db } from "../db/"
+
+
 
 // Define the type for a single data point
 type HeatmapDataPoint = [number, number, number];
 
 // Initialize the data array with type annotations
-const data: HeatmapDataPoint[] = [];
+const randData: HeatmapDataPoint[] = [];
+
+// Pull current user information from database
+
+const dbData: HeatmapDataPoint[] = [];
+
+// Gathers user's location, inputs a random severity for now
+const situations = await db.query.situations.findMany()
+situations.forEach(situation=> {
+    dbData.push([parseFloat(situation.lat), parseFloat(situation.lon), parseFloat(situation.severity)])
+})
 
 // Function to generate random heatmap data points
 function demoData(): HeatmapDataPoint {
-    const minLat = 29.6426;
-    const maxLat = 29.6606;
-    const minLong = -82.3338;
-    const maxLong = -82.3158;
+    const minLat = 29.5826;
+    const maxLat =  29.7306;
+    const minLong = -82.4038;
+    const maxLong = -82.2458;
 
     const randLat = Math.random() * (maxLat - minLat) + minLat;
     const randLong = Math.random() * (maxLong - minLong) + minLong;
@@ -26,9 +39,9 @@ function demoData(): HeatmapDataPoint {
     return [randLat, randLong, randSev];
 }
 
-// Generate 100 random data points
-for (let i = 0; i < 100; i++) {
-    data.push(demoData());
+// Generate 1000 random data points
+for (let i = 0; i < 1000; i++) {
+    randData.push(demoData());
 }
 
 // Main HeatMap component
@@ -39,7 +52,7 @@ const HeatMap: React.FC = () => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            <HeatmapLayer data={data} />
+            <HeatmapLayer data={randData} />
         </MapContainer>
     );
 };
@@ -55,9 +68,9 @@ const HeatmapLayer: React.FC<HeatmapLayerProps> = ({ data }) => {
     useEffect(() => {
         // Create and add the heatmap layer
         const heatLayer = L.heatLayer(data, {
-            radius: 25,
-            blur: 15,
-            maxZoom: 17,
+            radius: 17,
+            blur: 10,
+            maxZoom: 17.0,
             max: 1.0,
         }).addTo(map);
 
