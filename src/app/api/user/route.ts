@@ -3,6 +3,7 @@ import { db } from "../../../db";
 import { situations } from "../../../db/schema";
 import { getPlaces } from "../../../lib/places";
 import { classifySeverity } from "../../../lib/severity";
+import { generateEmbedding } from "@/lib/embedding";
 
 const bodySchema = z.object({
   name: z.string(),
@@ -24,6 +25,8 @@ export async function POST(req: Request) {
 
     const severity = await classifySeverity(res.situation);
 
+    const embedding = await generateEmbedding(res.situation);
+
     try {
       await db.insert(situations).values({
         ...res,
@@ -31,10 +34,11 @@ export async function POST(req: Request) {
         lon: place.location?.lng.toString() ?? "",
         place_name: place.name ?? "",
         address: place.address ?? "",
-        description: res.situation,
+        situation: res.situation,
         severity: severity,
         phone: res.phone,
         name: res.name,
+        embedding: embedding,
       });
     } catch (error) {
       console.log(error);
