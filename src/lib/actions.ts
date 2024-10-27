@@ -15,7 +15,6 @@ export async function autocompleteAddress(input: string) {
     params: {
       input,
       location: { lat: 29.643946, lng: -82.355659 }, // search near University of Florida, Gainesville
-      origin: { lat: 29.643946, lng: -82.355659 },
       key: process.env.PLACES_API_KEY!,
     },
   });
