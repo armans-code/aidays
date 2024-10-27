@@ -81,7 +81,7 @@ export default function UserDashboard() {
 
       <footer className="bg-gray-800 text-white p-6 mt-12">
         <div className="container mx-auto text-center">
-          <p>&copy; 2024 Resource Aid Link. All rights reserved.</p>
+          <p>no rights reserved</p>
         </div>
       </footer>
     </div>
