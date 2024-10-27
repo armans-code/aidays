@@ -1,7 +1,7 @@
 "use client";
 
 import { Map, Marker, useMap } from "@vis.gl/react-google-maps";
-import { getSimilarSituationsNearby, getSimilarWantsNearby, Request } from "../../../lib/actions";
+import { Request } from "../../../lib/actions";
 import { useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 
@@ -48,16 +48,16 @@ export default function MapPage({
               lng: parseFloat(want.lon),
             }}
             onClick={async () => {
-              const nearbySituations = await getSimilarSituationsNearby(
-                want.description,
-                user?.id || ""
-              );
-              const nearbyWants = await getSimilarWantsNearby(
-                want.description,
-                user?.id || ""
-              );
-              alert(nearbySituations)
-              alert(nearbyWants)
+              // const nearbySituations = await getSimilarSituationsNearby(
+              //   want.description,
+              //   user?.id || ""
+              // );
+              // const nearbyWants = await getSimilarWantsNearby(
+              //   want.description,
+              //   user?.id || ""
+              // );
+              // alert(nearbySituations)
+              // alert(nearbyWants)
               map?.panTo({
                 lat: parseFloat(want.lat),
                 lng: parseFloat(want.lon),
