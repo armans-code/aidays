@@ -237,7 +237,7 @@ export async function getSimilarSituationsNearby(
   }
 
   const query = sql`
-    SELECT situations.id, situations.severity, situations.situation, 
+    SELECT situations.id, situations.severity, situations.description, 
            situations.address, situations.name, situations.lon, 
            situations.lat, situations.phone,
            1 - (${cosineDistance(
