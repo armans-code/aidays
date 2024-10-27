@@ -9,4 +9,5 @@ The app serves two purposes:
 
 # Diagrams
 
+This is a diagram of how we store information after a user calls Alyssa.
 ![diagram](docs/diagram.png)
