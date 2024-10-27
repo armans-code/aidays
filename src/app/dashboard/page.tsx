@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { MapPin, FileText, MessageCircle, Info } from "lucide-react";
 import Link from "next/link";
+import SignOut from "../../components/layout/SignOut";
 
 export default function UserDashboard() {
   return (
@@ -82,6 +83,7 @@ export default function UserDashboard() {
       <footer className="bg-gray-800 text-white p-6 mt-12">
         <div className="container mx-auto text-center">
           <p>No rights reserved</p>
+          <SignOut />
         </div>
       </footer>
     </div>
