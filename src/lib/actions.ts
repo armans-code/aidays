@@ -4,7 +4,7 @@ import { Client } from "@googlemaps/google-maps-services-js";
 import { AutocompleteAddress, RegisterFormData } from "../app/register/page";
 import { createClerkClient } from "@clerk/backend";
 import { db } from "../db";
-import { users, wants } from "../db/schema";
+import { situations, users, wants } from "../db/schema";
 import { sql } from "drizzle-orm";
 
 export async function autocompleteAddress(input: string) {
@@ -173,4 +173,8 @@ export async function getNearbyWants(clerkId: string) {
 `;
 
   return (await db.execute(query)).rows;
+}
+
+export async function getSituations() {
+  return await db.select().from(situations);
 }
