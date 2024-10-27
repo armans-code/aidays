@@ -6,7 +6,7 @@ export const users = pgTable("users", {
   clerk_id: text("clerk_id").notNull(),
   address: text("address").notNull(),
   place_id: text("place_id").notNull(),
-  username: text("name").notNull(),
+  username: text("username").notNull(),
   phone: text("phone").notNull(),
   lon: text("lon").notNull(),
   lat: text("lat").notNull(),
@@ -19,6 +19,8 @@ export const wants = pgTable("wants", {
   address: text("address").notNull(),
   place_id: text("place_id").notNull(),
   severity: integer("severity").notNull(),
+  lon: text("lon").notNull(),
+  lat: text("lat").notNull(),
   user_id: integer("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
