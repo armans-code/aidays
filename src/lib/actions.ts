@@ -5,8 +5,9 @@ import { AutocompleteAddress, RegisterFormData } from "../app/register/page";
 import { createClerkClient } from "@clerk/backend";
 import { db } from "../db";
 import { Situation, situations, users, wants } from "../db/schema";
-import { sql } from "drizzle-orm";
+import { cosineDistance, desc, gt, sql } from "drizzle-orm";
 import { metersToMiles } from "./utils";
+import { generateEmbedding } from "./embedding";
 
 export async function autocompleteAddress(input: string) {
   const client = new Client({});
@@ -216,6 +217,87 @@ export type Request = {
   address: string;
   username: string;
   distance: number;
+  similarity: number;
   lat: string;
   lon: string;
 };
+
+export async function getSimilarSituationsNearby(
+  description: string,
+  clerkId: string
+) {
+  const embedding = await generateEmbedding(description);
+
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.clerk_id, clerkId),
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const query = sql`
+    SELECT situations.id, situations.severity, situations.situation, 
+           situations.address, situations.name, situations.lon, 
+           situations.lat, situations.phone,
+           1 - (${cosineDistance(
+             situations.embedding,
+             embedding
+           )}) as similarity,
+           ST_DistanceSphere(
+             ST_POINT(${Number(user.lon)}, ${Number(user.lat)}),
+             ST_POINT(CAST(situations.lon AS float), CAST(situations.lat AS float))
+           ) as distance
+    FROM situations
+    WHERE 1 - (${cosineDistance(situations.embedding, embedding)}) > 0.5
+    ORDER BY similarity DESC, distance ASC;
+  `;
+
+  return (await db.execute(query)).rows.map((r) => {
+    return {
+      ...r,
+      username: r.name,
+      distance: metersToMiles(r.distance as number),
+    };
+  }) as Request[];
+}
+
+export async function getSimilarWantsNearby(
+  description: string,
+  clerkId: string
+) {
+  const embedding = await generateEmbedding(description);
+
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.clerk_id, clerkId),
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const query = sql`
+    SELECT wants.lat, wants.lon, wants.id, wants.description, wants.address, wants.place_id, wants.severity,
+         users.username,
+         1 - (${cosineDistance(
+           situations.embedding,
+           embedding
+         )}) as similiarity,
+         ST_DistanceSphere(
+           ST_POINT(${Number(user.lon)}, ${Number(user.lat)}),
+           ST_POINT(CAST(wants.lon AS float), CAST(wants.lat AS float))
+         ) as distance
+    FROM wants
+    WHERE 1 - (${cosineDistance(situations.embedding, embedding)}) > 0.5
+    JOIN users ON wants.user_id = users.id
+    ORDER BY similarity DESC, distance ASC;
+  `;
+
+  return (await db.execute(query)).rows.map((r) => {
+    return {
+      ...r,
+      username: r.name,
+      distance: metersToMiles(r.distance as number),
+    };
+  }) as Request[];
+}
