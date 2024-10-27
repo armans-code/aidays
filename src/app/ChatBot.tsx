@@ -54,7 +54,7 @@ function ChatPrompt() {
   }
 
   return (
-    <div className="chatPrompt w-80 h-2/5 rounded-lg flex flex-col">
+    <div className="chatPrompt w-80 h-2/5 rounded-lg flex flex-col border-2 border-black overflow-hidden">
       <div className="bg-slate-300 font-bold text-base flex-column">
         AI Disaster Assistant
       </div>
@@ -97,7 +97,7 @@ const ChatBot = () => {
     setIsVisible((isVisible) => !isVisible);
   }
   return (
-    <div>
+    <div className="fixed bottom-4 right-4">
       <Image
         className="chatButton hover:cursor-pointer"
         onClick={handleClick}
