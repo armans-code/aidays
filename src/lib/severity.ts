@@ -12,7 +12,7 @@ const watsonxAIService = WatsonXAI.newInstance({
 
 const params = {
   input:
-    "Classify the natural disaster severity level on a scale from 0-10. 10 being highest severity. Only return the value and nothing else.\n\nInput: {input_text}\nOutput:",
+    "Classify the natural disaster severity level on a scale from 1-10. 10 being highest severity. Only return the value and nothing else.\n\nInput: {input_text}\nOutput:",
   modelId: "google/flan-ul2",
   parameters: {
     max_new_tokens: 100,
