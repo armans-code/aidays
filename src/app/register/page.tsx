@@ -20,7 +20,7 @@ import {
 } from "../../lib/actions";
 import { useClerk } from "@clerk/nextjs";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export type RegisterFormData = {
   username: string;
@@ -188,10 +188,16 @@ export default function RegisterPage() {
               </div>
             )}
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Registering..." : "Register"}
             </Button>
+            <p className="text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link href="/sign-in" className="text-primary hover:underline">
+                Sign in here
+              </Link>
+            </p>
           </CardFooter>
         </form>
       </Card>
