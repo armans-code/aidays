@@ -4,7 +4,7 @@ import { Client } from "@googlemaps/google-maps-services-js";
 import { AutocompleteAddress, RegisterFormData } from "../app/register/page";
 import { createClerkClient } from "@clerk/backend";
 import { db } from "../db";
-import { users } from "../db/schema";
+import { users, wants } from "../db/schema";
 
 export async function autocompleteAddress(input: string) {
   const client = new Client({});
@@ -19,7 +19,6 @@ export async function autocompleteAddress(input: string) {
   return result.data.predictions.map((p) => {
     return {
       name: p.description,
-      distance: p.distance_meters ?? 0,
       place_id: p.place_id,
     };
   });
@@ -57,8 +56,11 @@ export async function registerUser(
       const lon = place.data.result.geometry?.location.lng;
       await db.insert(users).values({
         username,
+        clerk_id: user.id,
         lat: lat?.toString() ?? "",
         lon: lon?.toString() ?? "",
+        place_id: address.place_id,
+        address: address.name,
         phone: formData.phone,
       });
     });
@@ -86,4 +88,53 @@ export async function validateUsername(username: string) {
     return true;
   }
   throw new Error("Username already exists");
+}
+
+export async function getUserAddress(clerkUserId: string) {
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.clerk_id, clerkUserId),
+  });
+  if (user) {
+    return { address: user.address, place_id: user.place_id };
+  }
+  throw new Error("User not found");
+}
+
+export async function createWant({
+  clerkId,
+  info,
+  urgency,
+  address,
+  place_id,
+}: {
+  clerkId: string;
+  info: string;
+  urgency: string;
+  address: string;
+  place_id: string;
+}) {
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.clerk_id, clerkId),
+  });
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // forgive me for this
+  const severity =
+    urgency === "critical"
+      ? 10
+      : urgency === "high"
+      ? 8
+      : urgency === "medium"
+      ? 5
+      : 3;
+
+  await db.insert(wants).values({
+    user_id: user.id,
+    description: info,
+    address,
+    place_id,
+    severity,
+  });
 }

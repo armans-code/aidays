@@ -31,7 +31,6 @@ export type RegisterFormData = {
 
 export type AutocompleteAddress = {
   name: string;
-  distance: number;
   place_id: string;
 };
 
@@ -74,6 +73,17 @@ export default function RegisterPage() {
 
     if (Object.values(formData).some((value) => value === "")) {
       setError("All fields are required");
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.username.length < 4) {
+      setError("Username must be at least 4 characters");
+      setIsLoading(false);
+      return;
+    }
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters");
       setIsLoading(false);
       return;
     }
