@@ -50,11 +50,13 @@ export default function Component() {
     );
   };
 
-  const filteredRequests = requests.filter(
-    (request) =>
-      // !request.resolved &&
-      request.severity >= severityFilter && request.distance <= distanceFilter
-  );
+  // const filteredRequests = requests.filter(
+  //   (request) =>
+  //     // !request.resolved &&
+  //     request.severity >= severityFilter && request.distance <= distanceFilter
+  // );
+
+  const filteredRequests = requests
 
   return (
     <SidebarProvider className="w-screen">
