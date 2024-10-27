@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import { Button } from "../components/ui/button";
+import ChatBot from "./ChatBot"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -45,19 +46,19 @@ export default function RootLayout({
             <nav className="ml-auto flex gap-4 sm:gap-6 items-center">
               <Link
                 className="text-sm font-medium hover:underline underline-offset-4"
-                href="#"
+                href="/feature"
               >
                 Features
               </Link>
               <Link
                 className="text-sm font-medium hover:underline underline-offset-4"
-                href="#"
+                href="/about"
               >
                 About
               </Link>
               <Link
                 className="text-sm font-medium hover:underline underline-offset-4"
-                href="#"
+                href="/contact"
               >
                 Contact
               </Link>
@@ -76,6 +77,7 @@ export default function RootLayout({
               </SignedOut>
             </nav>
           </header>
+          <ChatBot />
           {children}
         </body>
       </html>

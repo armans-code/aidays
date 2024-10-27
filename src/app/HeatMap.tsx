@@ -23,7 +23,7 @@ const dbData: HeatmapDataPoint[] = [];
 // Gathers user's location, inputs a random severity for now
 const situations = await db.query.situations.findMany()
 situations.forEach(situation=> {
-    dbData.push([parseFloat(situation.lat), parseFloat(situation.lon), parseFloat(situation.severity)])
+    dbData.push([parseFloat(situation.lat), parseFloat(situation.lon), situation.severity])
 })
 
 // Function to generate random heatmap data points
