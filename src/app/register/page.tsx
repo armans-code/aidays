@@ -77,6 +77,17 @@ export default function RegisterPage() {
       return;
     }
 
+    if (formData.username.length < 4) {
+      setError("Username must be at least 4 characters");
+      setIsLoading(false);
+      return;
+    }
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       if (address) {
         await validateUsername(formData.username);
