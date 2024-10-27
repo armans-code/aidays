@@ -6,6 +6,7 @@ import { createClerkClient } from "@clerk/backend";
 import { db } from "../db";
 import { situations, users, wants } from "../db/schema";
 import { sql } from "drizzle-orm";
+import { metersToMiles } from "./utils";
 
 export async function autocompleteAddress(input: string) {
   const client = new Client({});
@@ -161,7 +162,7 @@ export async function getNearbyWants(clerkId: string) {
   }
 
   const query = sql`
-  SELECT wants.id, wants.description, wants.address, wants.place_id, 
+  SELECT wants.lat, wants.lon, wants.id, wants.description, wants.address, wants.place_id, wants.severity,
          users.username,
          ST_DistanceSphere(
            ST_POINT(${Number(user.lon)}, ${Number(user.lat)}),
@@ -172,9 +173,24 @@ export async function getNearbyWants(clerkId: string) {
   ORDER BY distance ASC;
 `;
 
-  return (await db.execute(query)).rows;
+  return (await db.execute(query)).rows.map((r) => {
+    return {
+      ...r,
+      distance: metersToMiles(r.distance as number),
+    };
+  }) as Wants;
 }
 
-export async function getSituations() {
-  return await db.select().from(situations);
-}
+export type Want = {
+  id: number;
+  severity: number;
+  description: string;
+  address: string;
+  place_id: string;
+  username: string;
+  distance: number;
+  lat: string;
+  lon: string;
+};
+
+export type Wants = Want[];

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,71 +20,26 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
-type HelpRequest = {
-  id: string;
-  username: string;
-  description: string;
-  severity: number;
-  address: string;
-  distance: number;
-  resolved: boolean;
-};
-
-const initialRequests: HelpRequest[] = [
-  {
-    id: "1",
-    username: "JohnDoe",
-    description: "Trapped in flooded basement",
-    severity: 9,
-    address: "123 Main St",
-    distance: 2.5,
-    resolved: false,
-  },
-  {
-    id: "2",
-    username: "JaneSmith",
-    description: "Need medical supplies",
-    severity: 7,
-    address: "456 Elm St",
-    distance: 1.8,
-    resolved: false,
-  },
-  {
-    id: "3",
-    username: "BobJohnson",
-    description: "Roof collapsed",
-    severity: 10,
-    address: "789 Oak St",
-    distance: 3.2,
-    resolved: false,
-  },
-  {
-    id: "4",
-    username: "AliceWilliams",
-    description: "Food shortage",
-    severity: 6,
-    address: "321 Pine St",
-    distance: 0.9,
-    resolved: false,
-  },
-  {
-    id: "5",
-    username: "CharlieBrown",
-    description: "Elderly person needs evacuation",
-    severity: 8,
-    address: "654 Maple St",
-    distance: 4.1,
-    resolved: false,
-  },
-];
+import SituationMap from "../map/Map";
+import { getNearbyWants, Want, Wants } from "../../lib/actions";
+import { useUser } from "@clerk/nextjs";
 
 export default function Component() {
-  const [requests, setRequests] = useState<HelpRequest[]>(initialRequests);
+  const [requests, setRequests] = useState<Wants>([]);
   const [severityFilter, setSeverityFilter] = useState<number>(1);
   const [distanceFilter, setDistanceFilter] = useState<number>(5);
+  const [selectedRequest, setSelectedRequest] = useState<Want | null>(null);
+  const { user } = useUser();
 
-  const handleResolve = (id: string) => {
+  useEffect(() => {
+    const get = async () => {
+      const res = await getNearbyWants(user?.id as string);
+      setRequests(res);
+    };
+    if (user?.id) get();
+  }, [user?.id]);
+
+  const handleResolve = (id: number) => {
     setRequests(
       requests.map((request) =>
         request.id === id ? { ...request, resolved: true } : request
@@ -94,25 +49,22 @@ export default function Component() {
 
   const filteredRequests = requests.filter(
     (request) =>
-      !request.resolved &&
-      request.severity >= severityFilter &&
-      request.distance <= distanceFilter
+      // !request.resolved &&
+      request.severity >= severityFilter && request.distance <= distanceFilter
   );
 
   return (
     <SidebarProvider className="w-screen">
       <div className="flex h-screen overflow-hidden w-screen">
         {/* Map Placeholder */}
-        <div className="flex-1 bg-muted p-4">
-          <div className="h-full rounded-lg border-2 border-dashed border-muted-foreground flex items-center justify-center">
-            <span className="text-2xl text-muted-foreground">
-              Map Placeholder
-            </span>
-          </div>
-        </div>
+        <SituationMap
+          wants={requests}
+          want={selectedRequest}
+          setWant={setSelectedRequest}
+        />
 
         {/* Sidebar */}
-        <Sidebar collapsible="none" className="w-[400px] border-l">
+        <Sidebar collapsible="none" className="w-[600px] border-l">
           <SidebarHeader className="h-16 flex items-center px-4 border-b">
             <h1 className="text-2xl font-bold flex-1">Resource Requests</h1>
             {/* <SidebarTrigger>
@@ -144,7 +96,7 @@ export default function Component() {
                   htmlFor="distance-filter"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Maximum Distance: {distanceFilter} km
+                  Maximum Distance: {distanceFilter} miles
                 </label>
                 <Slider
                   id="distance-filter"
@@ -161,7 +113,15 @@ export default function Component() {
             <ScrollArea className="h-[calc(100vh-12rem)]">
               <div className="p-4 space-y-4">
                 {filteredRequests.map((request) => (
-                  <Card key={request.id}>
+                  <Card
+                    key={request.id}
+                    className={
+                      request.id == selectedRequest?.id
+                        ? "bg-gray-100 cursor-pointer"
+                        : "cursor-pointer"
+                    }
+                    onClick={() => setSelectedRequest(request)}
+                  >
                     <CardHeader>
                       <CardTitle className="flex justify-between items-center">
                         <span>{request.username}</span>
@@ -184,7 +144,7 @@ export default function Component() {
                         <span>{request.address}</span>
                       </div>
                       <div className="text-sm text-muted-foreground mt-1">
-                        Distance: {request.distance} km
+                        Distance: {request.distance.toFixed(2)} miles
                       </div>
                     </CardContent>
                     <CardFooter>
