@@ -109,12 +109,14 @@ export async function createWant({
   urgency,
   address,
   place_id,
+  tags,
 }: {
   clerkId: string;
   info: string;
   urgency: string;
   address: string;
   place_id: string;
+  tags: string[];
 }) {
   const user = await db.query.users.findFirst({
     where: (users, { eq }) => eq(users.clerk_id, clerkId),
@@ -149,6 +151,7 @@ export async function createWant({
     address,
     place_id,
     severity,
+    tags,
     lon: lon.toString() ?? "",
     lat: lat.toString() ?? "",
   });
@@ -163,7 +166,7 @@ export async function getNearbyWants(clerkId: string) {
   }
 
   const query = sql`
-  SELECT wants.lat, wants.lon, wants.id, wants.description, wants.address, wants.place_id, wants.severity,
+  SELECT wants.tags, wants.lat, wants.lon, wants.id, wants.description, wants.address, wants.place_id, wants.severity,
          users.username,
          ST_DistanceSphere(
            ST_POINT(${Number(user.lon)}, ${Number(user.lat)}),
@@ -220,6 +223,7 @@ export type Request = {
   similarity: number;
   lat: string;
   lon: string;
+  tags: string[] | undefined;
 };
 
 export async function getSimilarSituationsNearby(
@@ -301,3 +305,21 @@ export async function getSimilarWantsNearby(
     };
   }) as Request[];
 }
+
+export const getPoints = async () => {
+  const w = (await db.query.wants.findMany()).map((r) => {
+    return {
+      lat: r.lat,
+      lon: r.lon,
+      severity: r.severity,
+    };
+  });
+  const s = (await db.query.situations.findMany()).map((r) => {
+    return {
+      lat: r.lat,
+      lon: r.lon,
+      severity: r.severity,
+    };
+  });
+  return w.concat(s);
+};

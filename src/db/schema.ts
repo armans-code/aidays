@@ -1,7 +1,8 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   index,
   integer,
+  json,
   pgTable,
   serial,
   text,
@@ -29,6 +30,10 @@ export const wants = pgTable(
     address: text("address").notNull(),
     place_id: text("place_id").notNull(),
     severity: integer("severity").notNull(),
+    tags: text("tags")
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
     lon: text("lon").notNull(),
     lat: text("lat").notNull(),
     user_id: integer("user_id")
@@ -65,7 +70,7 @@ export const situations = pgTable(
     embedding: vector("embedding", { dimensions: 768 }),
   },
   (table) => ({
-    embeddingIndex: index("embeddingIndex").using(
+    embeddingIndex: index("embeddingIndexx").using(
       "hnsw",
       table.embedding.op("vector_cosine_ops")
     ),

@@ -56,7 +56,8 @@ export default function Component() {
   //     request.severity >= severityFilter && request.distance <= distanceFilter
   // );
 
-  const filteredRequests = requests
+  const filteredRequests = requests;
+  console.log(requests);
 
   return (
     <SidebarProvider className="w-screen">
@@ -146,7 +147,7 @@ export default function Component() {
                       </p>
                       <div className="flex items-center text-sm text-muted-foreground">
                         <MapPin className="w-4 h-4 mr-1" />
-                        <span>{request.address}</span>
+                        <span className="truncate">{request.address}</span>
                       </div>
                       <div className="text-sm text-muted-foreground mt-1">
                         Distance: {request.distance.toFixed(2)} miles
@@ -159,6 +160,11 @@ export default function Component() {
                       >
                         Resolve
                       </Button> */}
+                      {request.tags?.map((tag) => (
+                        <Badge variant="outline" className="mx-1" key={tag}>
+                          {tag}
+                        </Badge>
+                      ))}
                     </CardFooter>
                   </Card>
                 ))}
