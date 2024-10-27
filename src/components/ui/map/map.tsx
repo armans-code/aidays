@@ -56,8 +56,8 @@ export default function MapPage({
                 want.description,
                 user?.id || ""
               );
-              alert(nearbySituations)
-              alert(nearbyWants)
+              console.log(nearbySituations)
+              console.log(nearbyWants)
               map?.panTo({
                 lat: parseFloat(want.lat),
                 lng: parseFloat(want.lon),

@@ -39,7 +39,7 @@ export const wants = pgTable(
     embedding: vector("embedding", { dimensions: 768 }),
   },
   (table) => ({
-    embeddingIndex: index("embeddingIndex").using(
+    embeddingIndex: index("wantsEmbeddingIndex").using(
       "hnsw",
       table.embedding.op("vector_cosine_ops")
     ),
@@ -66,7 +66,7 @@ export const situations = pgTable(
     embedding: vector("embedding", { dimensions: 768 }),
   },
   (table) => ({
-    embeddingIndex: index("embeddingIndex").using(
+    embeddingIndex: index("situationsEmbeddingIndex").using(
       "hnsw",
       table.embedding.op("vector_cosine_ops")
     ),

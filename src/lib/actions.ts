@@ -5,7 +5,7 @@ import { AutocompleteAddress, RegisterFormData } from "../app/register/page";
 import { createClerkClient } from "@clerk/backend";
 import { db } from "../db";
 import { Situation, situations, users, wants } from "../db/schema";
-import { cosineDistance, desc, gt, sql } from "drizzle-orm";
+import { asc, cosineDistance, desc, gt, sql } from "drizzle-orm";
 import { metersToMiles } from "./utils";
 import { generateEmbedding } from "./embedding";
 
@@ -236,24 +236,32 @@ export async function getSimilarSituationsNearby(
     throw new Error("User not found");
   }
 
-  const query = sql`
-    SELECT situations.id, situations.severity, situations.description, 
-           situations.address, situations.name, situations.lon, 
-           situations.lat, situations.phone,
-           1 - (${cosineDistance(
-             situations.embedding,
-             embedding
-           )}) as similarity,
-           ST_DistanceSphere(
-             ST_POINT(${Number(user.lon)}, ${Number(user.lat)}),
-             ST_POINT(CAST(situations.lon AS float), CAST(situations.lat AS float))
-           ) as distance
-    FROM situations
-    WHERE 1 - (${cosineDistance(situations.embedding, embedding)}) > 0.5
-    ORDER BY similarity DESC, distance ASC;
-  `;
+  const similarity = sql<number>`1 - (${cosineDistance(
+    situations.embedding,
+    embedding
+  )})`;
 
-  return (await db.execute(query)).rows.map((r) => {
+  const similarSituations = await db
+    .select({
+      id: situations.id,
+      severity: situations.severity,
+      description: situations.description,
+      address: situations.address,
+      name: situations.name,
+      lon: situations.lon,
+      lat: situations.lat,
+      phone: situations.phone,
+      similarity,
+      distance: sql`ST_DistanceSphere(
+        ST_POINT(${Number(user.lon)}, ${Number(user.lat)}),
+        ST_POINT(CAST(situations.lon AS float), CAST(situations.lat AS float)
+      )`,
+    })
+    .from(situations)
+    .where(gt(similarity, 0.5))
+    .orderBy((t) => [desc(t.similarity), asc(t.distance)]);
+
+  return similarSituations.map((r) => {
     return {
       ...r,
       username: r.name,
@@ -277,21 +285,18 @@ export async function getSimilarWantsNearby(
   }
 
   const query = sql`
-    SELECT wants.lat, wants.lon, wants.id, wants.description, wants.address, wants.place_id, wants.severity,
+  SELECT wants.lat, wants.lon, wants.id, wants.description, wants.address, wants.place_id, wants.severity,
          users.username,
-         1 - (${cosineDistance(
-           situations.embedding,
-           embedding
-         )}) as similiarity,
+         1 - (${cosineDistance(situations.embedding, embedding)}) AS similarity,
          ST_DistanceSphere(
            ST_POINT(${Number(user.lon)}, ${Number(user.lat)}),
            ST_POINT(CAST(wants.lon AS float), CAST(wants.lat AS float))
-         ) as distance
-    FROM wants
-    WHERE 1 - (${cosineDistance(situations.embedding, embedding)}) > 0.5
-    JOIN users ON wants.user_id = users.id
-    ORDER BY similarity DESC, distance ASC;
-  `;
+         ) AS distance
+  FROM wants
+  JOIN users ON wants.user_id = users.id
+  WHERE 1 - (${cosineDistance(situations.embedding, embedding)}) > 0.5
+  ORDER BY similarity DESC, distance ASC;
+`;
 
   return (await db.execute(query)).rows.map((r) => {
     return {
