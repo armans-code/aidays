@@ -11,7 +11,7 @@
 }
 
 .chatPrompt {
-    z-index: 1;
+    z-index: 50;
     position: fixed;
     bottom: 10rem;
     right: 5rem;

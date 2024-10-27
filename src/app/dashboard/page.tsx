@@ -84,15 +84,6 @@ export default function UserDashboard() {
           <p>&copy; 2024 Resource Aid Link. All rights reserved.</p>
         </div>
       </footer>
-
-      {/* Floating Chatbot Button */}
-      <Button
-        className="fixed bottom-6 right-6 rounded-full w-16 h-16 shadow-lg"
-        size="icon"
-      >
-        <MessageCircle className="w-8 h-8" />
-        <span className="sr-only">Open Chatbot</span>
-      </Button>
     </div>
   );
 }
