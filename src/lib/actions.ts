@@ -5,6 +5,7 @@ import { AutocompleteAddress, RegisterFormData } from "../app/register/page";
 import { createClerkClient } from "@clerk/backend";
 import { db } from "../db";
 import { situations, users, wants } from "../db/schema";
+import { sql } from "drizzle-orm";
 
 export async function autocompleteAddress(input: string) {
   const client = new Client({});
@@ -120,6 +121,16 @@ export async function createWant({
     throw new Error("User not found");
   }
 
+  const googleClient = new Client({});
+  const place = await googleClient.placeDetails({
+    params: {
+      key: process.env.PLACES_API_KEY!,
+      place_id: place_id,
+    },
+  });
+  const lat = place.data.result.geometry?.location.lat as number;
+  const lon = place.data.result.geometry?.location.lng as number;
+
   // forgive me for this
   const severity =
     urgency === "critical"
@@ -136,7 +147,32 @@ export async function createWant({
     address,
     place_id,
     severity,
+    lon: lon.toString() ?? "",
+    lat: lat.toString() ?? "",
   });
+}
+
+export async function getNearbyWants(clerkId: string) {
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.clerk_id, clerkId),
+  });
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const query = sql`
+  SELECT wants.id, wants.description, wants.address, wants.place_id, 
+         users.username,
+         ST_DistanceSphere(
+           ST_POINT(${Number(user.lon)}, ${Number(user.lat)}),
+           ST_POINT(CAST(wants.lon AS float), CAST(wants.lat AS float))
+         ) as distance
+  FROM wants
+  JOIN users ON wants.user_id = users.id
+  ORDER BY distance ASC;
+`;
+
+  return (await db.execute(query)).rows;
 }
 
 export async function getSituations() {

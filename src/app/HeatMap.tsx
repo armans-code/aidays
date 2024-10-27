@@ -1,23 +1,37 @@
 "use client";
+"use client";
 
-import React, { useEffect } from "react";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import "leaflet.heat";
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import 'leaflet.heat';
+import { db } from "../db/"
+
+
 
 // Define the type for a single data point
 type HeatmapDataPoint = [number, number, number];
 
 // Initialize the data array with type annotations
-const data: HeatmapDataPoint[] = [];
+const randData: HeatmapDataPoint[] = [];
+
+// Pull current user information from database
+
+const dbData: HeatmapDataPoint[] = [];
+
+// Gathers user's location, inputs a random severity for now
+const situations = await db.query.situations.findMany()
+situations.forEach(situation=> {
+    dbData.push([parseFloat(situation.lat), parseFloat(situation.lon), situation.severity])
+})
 
 // Function to generate random heatmap data points
 function demoData(): HeatmapDataPoint {
-  const minLat = 29.5826;
-  const maxLat = 29.7306;
-  const minLong = -82.4038;
-  const maxLong = -82.2458;
+    const minLat = 29.5826;
+    const maxLat =  29.7306;
+    const minLong = -82.4038;
+    const maxLong = -82.2458;
 
   const randLat = Math.random() * (maxLat - minLat) + minLat;
   const randLong = Math.random() * (maxLong - minLong) + minLong;
@@ -26,9 +40,9 @@ function demoData(): HeatmapDataPoint {
   return [randLat, randLong, randSev];
 }
 
-// Generate 100 random data points
+// Generate 1000 random data points
 for (let i = 0; i < 1000; i++) {
-  data.push(demoData());
+    randData.push(demoData());
 }
 
 // Main HeatMap component
@@ -43,7 +57,7 @@ const HeatMap: React.FC = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      <HeatmapLayer data={data} />
+      <HeatmapLayer data={randData} />
     </MapContainer>
   );
 };
@@ -64,7 +78,6 @@ const HeatmapLayer: React.FC<HeatmapLayerProps> = ({ data }) => {
       maxZoom: 17,
       max: 1,
     }).addTo(map);
-
     // Cleanup: remove the heat layer when the component unmounts
     return () => {
       map.removeLayer(heatLayer);
