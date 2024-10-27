@@ -31,7 +31,6 @@ export type RegisterFormData = {
 
 export type AutocompleteAddress = {
   name: string;
-  distance: number;
   place_id: string;
 };
 

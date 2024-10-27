@@ -40,7 +40,7 @@ export default function UserDashboard() {
             </CardHeader>
             <CardContent>
               <Button className="w-full" size="lg" asChild>
-                <Link href="/submit-request">New Resource Request</Link>
+                <Link href="/dashboard/submit">New Resource Request</Link>
               </Button>
             </CardContent>
           </Card>
