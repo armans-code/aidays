@@ -140,5 +140,5 @@ export async function createWant({
 }
 
 export async function getSituations() {
-  return await db.select().from(situations)
+  return await db.select().from(situations);
 }

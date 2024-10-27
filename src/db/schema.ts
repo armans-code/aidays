@@ -41,3 +41,5 @@ export const situations = pgTable("situations", {
   phone: text("phone").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
+
+export type Situation = typeof situations.$inferSelect;

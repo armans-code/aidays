@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Layers, ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
-import { Situation } from "@/lib/types";
+import { MapPin, Layers } from "lucide-react";
+import { Map, Marker, useMap } from "@vis.gl/react-google-maps";
+import { Situation } from "../../../db/schema";
 
 export default function MapPage({ situations }: { situations: Situation[] }) {
   const [isHeatmap, setIsHeatmap] = useState(false);
+  const map = useMap("id");
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-sky-100 to-sky-50">
@@ -55,32 +55,36 @@ export default function MapPage({ situations }: { situations: Situation[] }) {
               {isHeatmap ? (
                 "Severity Heatmap"
               ) : (
-                <APIProvider
-                  apiKey={process.env.NEXT_PUBLIC_MAPS_API_KEY || ""}
+                <Map
+                  style={{ width: "100%", height: "100%" }}
+                  defaultCenter={{
+                    lat: 29.6469297097701,
+                    lng: -82.353240760785,
+                  }}
+                  defaultZoom={12.5}
+                  gestureHandling={"greedy"}
+                  disableDefaultUI={true}
+                  id="id"
                 >
-                  <Map
-                    style={{ width: "100%", height: "100%" }}
-                    defaultCenter={{
-                      lat: 29.6469297097701,
-                      lng: -82.353240760785,
-                    }}
-                    defaultZoom={12.5}
-                    gestureHandling={"greedy"}
-                    disableDefaultUI={true}
-                  >
-                    {situations.map((situation: Situation) => {
-                      return (
-                        <Marker
-                          key={situation.id}
-                          position={{
+                  {situations.map((situation: Situation) => {
+                    return (
+                      <Marker
+                        key={situation.id}
+                        position={{
+                          lat: parseFloat(situation.lat),
+                          lng: parseFloat(situation.lon),
+                        }}
+                        onClick={() => {
+                          map?.panTo({
                             lat: parseFloat(situation.lat),
                             lng: parseFloat(situation.lon),
-                          }}
-                        />
-                      );
-                    })}
-                  </Map>
-                </APIProvider>
+                          });
+                          map?.setZoom(15);
+                        }}
+                      />
+                    );
+                  })}
+                </Map>
               )}
             </div>
             <div className="mt-4 text-sm text-gray-600">
