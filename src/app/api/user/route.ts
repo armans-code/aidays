@@ -31,7 +31,7 @@ export async function POST(req: Request) {
         lon: place.location?.lng.toString() ?? "",
         place_name: place.name ?? "",
         address: place.address ?? "",
-        situation: res.situation,
+        description: res.situation,
         severity: severity,
         phone: res.phone,
         name: res.name,

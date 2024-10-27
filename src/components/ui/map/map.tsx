@@ -1,29 +1,29 @@
 "use client";
 
 import { Map, Marker, useMap } from "@vis.gl/react-google-maps";
-import { Want, Wants } from "../../../lib/actions";
+import { Request } from "../../../lib/actions";
 import { useEffect } from "react";
 
 export default function MapPage({
-  wants,
-  want,
-  setWant,
+  requests,
+  selectedRequest,
+  setSelectedRequest,
 }: {
-  wants: Wants;
-  want: Want | null;
-  setWant: (want: Want) => void;
+  requests: Request[];
+  selectedRequest: Request | null;
+  setSelectedRequest: (want: Request) => void;
 }) {
   const map = useMap("id");
 
   useEffect(() => {
-    if (want && map) {
+    if (selectedRequest && map) {
       map.setZoom(15);
       map.panTo({
-        lat: parseFloat(want.lat),
-        lng: parseFloat(want.lon),
+        lat: parseFloat(selectedRequest.lat),
+        lng: parseFloat(selectedRequest.lon),
       });
     }
-  }, [map, want]);
+  }, [map, selectedRequest]);
 
   return (
     <Map
@@ -37,7 +37,7 @@ export default function MapPage({
       disableDefaultUI={true}
       id="id"
     >
-      {wants.map((want: Want) => {
+      {requests.map((want: Request) => {
         return (
           <Marker
             key={want.id}
@@ -51,7 +51,7 @@ export default function MapPage({
                 lng: parseFloat(want.lon),
               });
               map?.setZoom(15);
-              setWant(want);
+              setSelectedRequest(want);
             }}
           />
         );

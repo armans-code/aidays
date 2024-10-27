@@ -4,7 +4,7 @@ import { Client } from "@googlemaps/google-maps-services-js";
 import { AutocompleteAddress, RegisterFormData } from "../app/register/page";
 import { createClerkClient } from "@clerk/backend";
 import { db } from "../db";
-import { situations, users, wants } from "../db/schema";
+import { Situation, situations, users, wants } from "../db/schema";
 import { sql } from "drizzle-orm";
 import { metersToMiles } from "./utils";
 
@@ -178,19 +178,44 @@ export async function getNearbyWants(clerkId: string) {
       ...r,
       distance: metersToMiles(r.distance as number),
     };
-  }) as Wants;
+  }) as Request[];
 }
 
-export type Want = {
+export async function getNearbySituations(clerkId: string) {
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.clerk_id, clerkId),
+  });
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const query = sql`
+  SELECT situations.lat, situations.lon, situations.id, situations.description, situations.address, situations.severity,
+         situations.name,
+         ST_DistanceSphere(
+           ST_POINT(${Number(user.lon)}, ${Number(user.lat)}),
+           ST_POINT(CAST(situations.lon AS float), CAST(situations.lat AS float))
+         ) as distance
+  FROM situations
+  ORDER BY distance ASC;
+`;
+
+  return (await db.execute(query)).rows.map((r) => {
+    return {
+      ...r,
+      username: r.name,
+      distance: metersToMiles(r.distance as number),
+    };
+  }) as Request[];
+}
+
+export type Request = {
   id: number;
   severity: number;
   description: string;
   address: string;
-  place_id: string;
   username: string;
   distance: number;
   lat: string;
   lon: string;
 };
-
-export type Wants = Want[];

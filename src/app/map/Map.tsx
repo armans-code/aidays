@@ -1,20 +1,24 @@
 "use client";
 import MapPage from "@/components/ui/map/map";
 import { APIProvider } from "@vis.gl/react-google-maps";
-import { Want, Wants } from "../../lib/actions";
+import { Request } from "../../lib/actions";
 
 export default function SituationMap({
-  wants,
-  want,
-  setWant,
+  requests,
+  selectedRequest,
+  setSelectedRequest,
 }: {
-  wants: Wants;
-  want: Want | null;
-  setWant: (want: Want) => void;
+  requests: Request[];
+  selectedRequest: Request | null;
+  setSelectedRequest: (request: Request) => void;
 }) {
   return (
     <APIProvider apiKey={process.env.NEXT_PUBLIC_MAPS_API_KEY!}>
-      <MapPage wants={wants} want={want} setWant={setWant} />
+      <MapPage
+        requests={requests}
+        selectedRequest={selectedRequest}
+        setSelectedRequest={setSelectedRequest}
+      />
     </APIProvider>
   );
 }

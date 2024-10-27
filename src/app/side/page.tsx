@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -18,23 +17,27 @@ import {
   SidebarContent,
   SidebarHeader,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import SituationMap from "../map/Map";
-import { getNearbyWants, Want, Wants } from "../../lib/actions";
+import {
+  getNearbySituations,
+  getNearbyWants,
+  Request,
+} from "../../lib/actions";
 import { useUser } from "@clerk/nextjs";
 
 export default function Component() {
-  const [requests, setRequests] = useState<Wants>([]);
+  const [requests, setRequests] = useState<Request[]>([]);
   const [severityFilter, setSeverityFilter] = useState<number>(1);
   const [distanceFilter, setDistanceFilter] = useState<number>(5);
-  const [selectedRequest, setSelectedRequest] = useState<Want | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
   const { user } = useUser();
 
   useEffect(() => {
     const get = async () => {
-      const res = await getNearbyWants(user?.id as string);
-      setRequests(res);
+      const w = await getNearbyWants(user?.id as string);
+      const s = await getNearbySituations(user?.id as string);
+      setRequests(w.concat(s));
     };
     if (user?.id) get();
   }, [user?.id]);
@@ -58,9 +61,9 @@ export default function Component() {
       <div className="flex h-screen overflow-hidden w-screen">
         {/* Map Placeholder */}
         <SituationMap
-          wants={requests}
-          want={selectedRequest}
-          setWant={setSelectedRequest}
+          requests={requests}
+          selectedRequest={selectedRequest}
+          setSelectedRequest={setSelectedRequest}
         />
 
         {/* Sidebar */}
@@ -148,12 +151,12 @@ export default function Component() {
                       </div>
                     </CardContent>
                     <CardFooter>
-                      <Button
+                      {/* <Button
                         onClick={() => handleResolve(request.id)}
                         className="w-full"
                       >
                         Resolve
-                      </Button>
+                      </Button> */}
                     </CardFooter>
                   </Card>
                 ))}
