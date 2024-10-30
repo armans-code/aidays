@@ -18,7 +18,7 @@ import {
   registerUser,
   validateUsername,
 } from "../../lib/actions";
-import { useClerk } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 import Link from "next/link";
 

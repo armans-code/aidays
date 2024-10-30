@@ -1,8 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Eye, Shield, Smartphone } from "lucide-react";
 import Link from "next/link";
+import Footer from "@/components/footer";
 
 export default function LandingPage() {
   return (
@@ -20,8 +21,18 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="space-x-4">
-              <Button>Get Started</Button>
-              <Button variant="outline">Learn More</Button>
+              <Link
+                href="/register"
+                className={buttonVariants({ variant: "default" })}
+              >
+                Get Started
+              </Link>
+              <Link
+                href="/features"
+                className={buttonVariants({ variant: "outline" })}
+              >
+                Learn More
+              </Link>
             </div>
           </div>
         </div>
@@ -40,20 +51,22 @@ export default function LandingPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                Quickly request emergency resources through our intuitive mobile
-                and web interfaces.
+                Just call our dedicated helpline, and our AI assistant, Alyssa,
+                will be ready to assist you in real-time. With one phone call,
+                you’ll receive the support you need.
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Eye className="w-6 h-6 mr-2 text-green-500" />
-                  Real-time Request Visibility
+                  Live Request Tracking
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                Responders can instantly view and prioritize incoming requests
-                on an interactive map.
+                Responders gain instant access to incoming requests via an
+                interactive map, allowing for real-time prioritization and
+                efficient management.
               </CardContent>
             </Card>
             <Card>
@@ -64,8 +77,9 @@ export default function LandingPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                Our AI analyzes requests, suggests optimal resource allocation,
-                and provides decision support.
+                Using advanced NLP, our AI analyzes your calls in real
+                time—transforming speech to text and back again—to capture
+                essential details instantly.
               </CardContent>
             </Card>
           </div>
@@ -117,19 +131,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          No rights reserved
-        </p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Terms of Service
-          </Link>
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Privacy
-          </Link>
-        </nav>
-      </footer>
+      <Footer />
     </div>
   );
 }
