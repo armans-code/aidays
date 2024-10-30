@@ -9,9 +9,9 @@ The app serves two purposes:
 1. You're able to create requests within the app. You can register and create a request and add your address.
 2. You're able to create requests by calling the phone number and speaking to an AI agent about the resources you're in need of.
 
-# Testing
+# Technology Decisions
 
-- Please refer to the .env.example and create a Vercel project, along with a Vercel Postgres instance and Next.js to test this.
+The frontend components and backend API route were built in Next.js and hosted on Vercel. We chose Next.js 15 mainly due to development speed reasons, as the hackathon was limited to 48 hours. Vercel also made it easy to host our PostgreSQL database and easily integrate it with the Drizzle ORM in Next.js.
 
 # Multidisciplinary
 
